@@ -8,10 +8,13 @@ namespace Algorithm
     {
         None = 0,
         Wall = 1,
+        CostUp = 2,
     }
     
     public class DijkstraAlgorithm
     {
+        private static int CostUp = 5;
+        
         /// <summary>
         /// ダイクストラ法による最短経路探索
         /// </summary>
@@ -41,7 +44,10 @@ namespace Algorithm
                 List<Vector2Int> canMoveNodes = GetCanMoveNodes(grid, currentPos);
                 foreach (var pos in canMoveNodes)
                 {
-                    int newCost = costs[currentPos.y, currentPos.x] + 1;
+                    int additionalCost = (grid[pos.y, pos.x] == (int)StageObjectType.CostUp) ? CostUp : 1;
+                    int newCost = costs[currentPos.y, currentPos.x] + additionalCost;
+                    
+                    
                     if (costs[pos.y, pos.x] > newCost)
                     {
                         costs[pos.y, pos.x] = newCost;
@@ -269,9 +275,9 @@ namespace Algorithm
         {
             return pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height;
         }
-
+        
         /// <summary>
-        /// 隣接するノードの中で最小コストのノードを取得
+        /// 最小コストのノードを取得
         /// </summary>
         /// <param name="nodes"></param>
         /// <param name="costs"></param>
@@ -291,6 +297,12 @@ namespace Algorithm
             return minNode;
         }
         
+        /// <summary>
+        /// 移動可能なノードを取得
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="currentPos"></param>
+        /// <returns></returns>
         private static List<Vector2Int> GetCanMoveNodes(int[,] grid, Vector2Int currentPos)
         {
             // この関数は移動可能なノードを返すように実装する

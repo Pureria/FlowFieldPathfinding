@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Algorithm;
 using UnityEngine;
+using Utils;
 
 public class MacCreater : MonoBehaviour
 {
@@ -38,6 +41,8 @@ public class MacCreater : MonoBehaviour
         MapInfo mapInfo = new MapInfo(mapData, width, height);
         mapInfoSO.mapInfo = mapInfo;
         MapGenerate(mapInfo);
+
+        mapInfo.UpdateDijkstraMap(new Vector2Int(5, 5));
     }
 
     private void MapGenerate(MapInfo mapInfo)
@@ -48,18 +53,23 @@ public class MacCreater : MonoBehaviour
             {
                 if(mapInfo.mapData[y, x] == 0)
                 {
-                    Instantiate(BlockPrefab, new Vector3(x, 0, -y), Quaternion.identity, transform);
+                    Instantiate(BlockPrefab, new Vector3(x, 0, y), Quaternion.identity, transform);
                 }
                 else if(mapInfo.mapData[y, x] == 2)
                 {
-                    Instantiate(CostUpBlockPrefab, new Vector3(x, 0, -y), Quaternion.identity, transform);
+                    Instantiate(CostUpBlockPrefab, new Vector3(x, 0, y), Quaternion.identity, transform);
                 }
                 else if(mapInfo.mapData[y, x] == 1)
                 {
-                    Instantiate(WallPrefab, new Vector3(x, 1, -y), Quaternion.identity, transform);
+                    Instantiate(WallPrefab, new Vector3(x, 1, y), Quaternion.identity, transform);
                 }
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        GizmosExtensions.DrawArrow(new Vector3(0.25f,0,0.25f), new Vector3(0.75f, 0, 0.75f));
     }
 }
 
@@ -68,11 +78,27 @@ public class MapInfo
     public int[,] mapData;
     public int width;
     public int height;
+    public int[,] dijkstraMap;
 
     public MapInfo(int[,] mapData, int width, int height)
     {
         this.mapData = mapData;
         this.width = width;
         this.height = height;
+        dijkstraMap = new int[height, width];
+        
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                dijkstraMap[y, x] = int.MaxValue;
+            }
+        }
+    }
+    
+    public void UpdateDijkstraMap(Vector2Int goal)
+    {
+        dijkstraMap = DijkstraAlgorithm.GetDijkstraMap(mapData, goal, out int maxCost);
+        DijkstraAlgorithm.PrintDijkstraMap(dijkstraMap);
     }
 }
