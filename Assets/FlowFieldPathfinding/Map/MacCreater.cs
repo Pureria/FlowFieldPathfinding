@@ -51,15 +51,16 @@ public class MacCreater : MonoBehaviour
         {
             for(int x = 0; x < mapInfo.width; x++)
             {
-                if(mapInfo.mapData[y, x] == 0)
+                int reversedY = mapInfo.height - 1 - y; // Y軸を逆にする
+                if (mapInfo.mapData[reversedY, x] == 0)
                 {
                     Instantiate(BlockPrefab, new Vector3(x, 0, y), Quaternion.identity, transform);
                 }
-                else if(mapInfo.mapData[y, x] == 2)
+                else if (mapInfo.mapData[reversedY, x] == 2)
                 {
                     Instantiate(CostUpBlockPrefab, new Vector3(x, 0, y), Quaternion.identity, transform);
                 }
-                else if(mapInfo.mapData[y, x] == 1)
+                else if (mapInfo.mapData[reversedY, x] == 1)
                 {
                     Instantiate(WallPrefab, new Vector3(x, 1, y), Quaternion.identity, transform);
                 }
