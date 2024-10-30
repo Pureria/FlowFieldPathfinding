@@ -24,7 +24,7 @@ public class MacCreater : MonoBehaviour
 
         int width = int.Parse(csvDatas[0][0]);
         int height = int.Parse(csvDatas[1][0]);
-        int[,] mapData = new int[width, height];
+        int[,] mapData = new int[height, width];
         
         for (int y = 0; y < height; y++)
         {
@@ -48,15 +48,15 @@ public class MacCreater : MonoBehaviour
             {
                 if(mapInfo.mapData[y, x] == 0)
                 {
-                    Instantiate(BlockPrefab, new Vector3(x, 0, y), Quaternion.identity, transform);
+                    Instantiate(BlockPrefab, new Vector3(x, 0, -y), Quaternion.identity, transform);
                 }
                 else if(mapInfo.mapData[y, x] == 2)
                 {
-                    Instantiate(CostUpBlockPrefab, new Vector3(x, 0, y), Quaternion.identity, transform);
+                    Instantiate(CostUpBlockPrefab, new Vector3(x, 0, -y), Quaternion.identity, transform);
                 }
                 else if(mapInfo.mapData[y, x] == 1)
                 {
-                    Instantiate(WallPrefab, new Vector3(x, 1, y), Quaternion.identity, transform);
+                    Instantiate(WallPrefab, new Vector3(x, 1, -y), Quaternion.identity, transform);
                 }
             }
         }
