@@ -6,7 +6,7 @@ using Algorithm;
 using UnityEngine;
 using Utils;
 
-public class MacCreater : MonoBehaviour
+public class MapCreater : MonoBehaviour
 {
     [SerializeField] private TextAsset csvFile;
     [SerializeField] private MapInfoSO mapInfoSO;
@@ -114,6 +114,11 @@ public class MapInfo
                 dijkstraMap[y, x] = int.MaxValue;
             }
         }
+    }
+    
+    public Vector2 GetFlowField(Vector2Int position)
+    {
+        return flowMap[position.y, position.x];
     }
 
     public void UpdateMap(Vector2Int goal)

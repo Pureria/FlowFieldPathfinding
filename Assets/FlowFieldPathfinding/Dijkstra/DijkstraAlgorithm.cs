@@ -13,7 +13,7 @@ namespace Algorithm
     
     public class DijkstraAlgorithm
     {
-        private static int CostUp = 5;
+        private static int CostUp = 10;
         
         /// <summary>
         /// ダイクストラ法による最短経路探索
