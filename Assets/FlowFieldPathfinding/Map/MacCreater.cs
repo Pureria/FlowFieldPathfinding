@@ -125,7 +125,7 @@ public class MapInfo
     private void UpdateDijkstraMap(Vector2Int goal)
     {
         dijkstraMap = DijkstraAlgorithm.GetDijkstraMap(mapData, goal, out int maxCost);
-        DijkstraAlgorithm.PrintDijkstraMap(dijkstraMap);
+        //DijkstraAlgorithm.PrintDijkstraMap(dijkstraMap);
     }
 
     private void UpdateFlowFieldMap(int[,] dijkstraMap)

@@ -526,6 +526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 50
   zoomSpeed: 80
+  mapInfoSO: {fileID: 11400000, guid: 49d71364006bf8543a23800539facb7e, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

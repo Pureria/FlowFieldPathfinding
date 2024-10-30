@@ -6,6 +6,7 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float zoomSpeed = 5f;
+    [SerializeField] private MapInfoSO mapInfoSO;
 
     private void Update()
     {
@@ -29,5 +30,18 @@ public class CameraController : MonoBehaviour
         
         //マウスホイールでZ軸移動
         transform.position += transform.up * -Input.mouseScrollDelta.y * zoomSpeed * Time.deltaTime;
+        
+        //クリックしたオブジェクト取得
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                //Debug.Log(hit.collider.gameObject.name);
+                Vector2Int clickPos = new Vector2Int((int)hit.point.x, (int)-hit.point.z);
+                mapInfoSO.mapInfo.UpdateMap(clickPos);
+            }
+        }
     }
 }
