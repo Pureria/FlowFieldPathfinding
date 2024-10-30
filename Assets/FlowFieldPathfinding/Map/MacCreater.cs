@@ -42,7 +42,7 @@ public class MacCreater : MonoBehaviour
         mapInfoSO.mapInfo = mapInfo;
         MapGenerate(mapInfo);
 
-        //mapInfo.UpdateDijkstraMap(new Vector2Int(5, 5));
+        mapInfo.UpdateMap(new Vector2Int(5, 5));
     }
 
     private void MapGenerate(MapInfo mapInfo)
@@ -52,17 +52,17 @@ public class MacCreater : MonoBehaviour
             for(int x = 0; x < mapInfo.width; x++)
             {
                 int reversedY = mapInfo.height - 1 - y; // Y軸を逆にする
-                if (mapInfo.mapData[reversedY, x] == 0)
+                if (mapInfo.mapData[y, x] == 0)
                 {
-                    Instantiate(BlockPrefab, new Vector3(x, 0, y), Quaternion.identity, transform);
+                    Instantiate(BlockPrefab, new Vector3(x, 0, -y), Quaternion.identity, transform);
                 }
-                else if (mapInfo.mapData[reversedY, x] == 2)
+                else if (mapInfo.mapData[y, x] == 2)
                 {
-                    Instantiate(CostUpBlockPrefab, new Vector3(x, 0, y), Quaternion.identity, transform);
+                    Instantiate(CostUpBlockPrefab, new Vector3(x, 0, -y), Quaternion.identity, transform);
                 }
-                else if (mapInfo.mapData[reversedY, x] == 1)
+                else if (mapInfo.mapData[y, x] == 1)
                 {
-                    Instantiate(WallPrefab, new Vector3(x, 1, y), Quaternion.identity, transform);
+                    Instantiate(WallPrefab, new Vector3(x, 1, -y), Quaternion.identity, transform);
                 }
             }
         }
@@ -70,7 +70,24 @@ public class MacCreater : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        GizmosExtensions.DrawArrow(new Vector3(0.25f,0,0.25f), new Vector3(0.75f, 0, 0.75f));
+        //ゲーム中のみ表示
+        if (!Application.isPlaying) return;
+        //マップ情報がない場合は表示しない
+        if (mapInfoSO.mapInfo == null) return;
+        
+        //フローフィールドに基づいて矢印を表示させる
+        for (int y = 0; y < mapInfoSO.mapInfo.height; y++)
+        {
+            for (int x = 0; x < mapInfoSO.mapInfo.width; x++)
+            {
+                //壁がある場合は表示しない
+                if (mapInfoSO.mapInfo.mapData[y, x] == 1) continue;
+                
+                Vector2 flow = mapInfoSO.mapInfo.flowMap[y, x];
+                Vector3 position = new Vector3(x, 1, -y);
+                GizmosExtensions.DrawArrow(position, position + new Vector3(flow.x * 0.5f, 0, -flow.y * 0.5f));
+            }
+        }
     }
 }
 
@@ -80,6 +97,7 @@ public class MapInfo
     public int width;
     public int height;
     public int[,] dijkstraMap;
+    public Vector2[,] flowMap;
 
     public MapInfo(int[,] mapData, int width, int height)
     {
@@ -87,6 +105,7 @@ public class MapInfo
         this.width = width;
         this.height = height;
         dijkstraMap = new int[height, width];
+        flowMap = new Vector2[height, width];
         
         for (int y = 0; y < height; y++)
         {
@@ -96,10 +115,61 @@ public class MapInfo
             }
         }
     }
+
+    public void UpdateMap(Vector2Int goal)
+    {
+        UpdateDijkstraMap(goal);
+        UpdateFlowFieldMap(dijkstraMap);
+    }
     
-    public void UpdateDijkstraMap(Vector2Int goal)
+    private void UpdateDijkstraMap(Vector2Int goal)
     {
         dijkstraMap = DijkstraAlgorithm.GetDijkstraMap(mapData, goal, out int maxCost);
         DijkstraAlgorithm.PrintDijkstraMap(dijkstraMap);
+    }
+
+    private void UpdateFlowFieldMap(int[,] dijkstraMap)
+    {
+        for(int height = 0; height < this.height; height++)
+        {
+            for(int width = 0; width < this.width; width++)
+            {
+                flowMap[height, width] = GetFlowField(new Vector2Int(width, height), dijkstraMap);
+            }
+        }
+    }
+    
+    private Vector2 GetFlowField(Vector2Int position, int[,] dijkstraMap)
+    {
+        Vector2Int[] directions = new Vector2Int[]
+        {
+            new Vector2Int(0, 1),
+            new Vector2Int(1, 0),
+            new Vector2Int(0, -1),
+            new Vector2Int(-1, 0),
+            new Vector2Int(1, 1),
+            new Vector2Int(1, -1),
+            new Vector2Int(-1, 1),
+            new Vector2Int(-1, -1),
+        };
+
+        int minCost = dijkstraMap[position.y, position.x];
+        Vector2Int minDirection = new Vector2Int(0, 0);
+        foreach (Vector2Int direction in directions)
+        {
+            Vector2Int nextPosition = position + direction;
+            if (nextPosition.x < 0 || nextPosition.x >= width || nextPosition.y < 0 || nextPosition.y >= height)
+            {
+                continue;
+            }
+
+            if (dijkstraMap[nextPosition.y, nextPosition.x] < minCost)
+            {
+                minCost = dijkstraMap[nextPosition.y, nextPosition.x];
+                minDirection = direction;
+            }
+        }
+
+        return new Vector2(minDirection.x, minDirection.y);
     }
 }

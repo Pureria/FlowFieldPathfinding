@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd74033d4f58e94e85f8d90b540c7a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: 5827ad2872ee3f8499c4fb233aea55c7, type: 3}
+  csvFile: {fileID: 4900000, guid: e303b6e147b26fa42b5ede731773f86a, type: 3}
   mapInfoSO: {fileID: 11400000, guid: 49d71364006bf8543a23800539facb7e, type: 2}
   BlockPrefab: {fileID: 9121445538676214100, guid: 45dd35a807e9a9443b8d8975c0b97e6e,
     type: 3}
