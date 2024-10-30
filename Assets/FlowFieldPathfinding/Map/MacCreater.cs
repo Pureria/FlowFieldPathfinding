@@ -42,7 +42,7 @@ public class MacCreater : MonoBehaviour
         mapInfoSO.mapInfo = mapInfo;
         MapGenerate(mapInfo);
 
-        mapInfo.UpdateDijkstraMap(new Vector2Int(5, 5));
+        //mapInfo.UpdateDijkstraMap(new Vector2Int(5, 5));
     }
 
     private void MapGenerate(MapInfo mapInfo)
