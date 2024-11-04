@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Algorithm;
@@ -17,6 +15,7 @@ public class MapCreater : MonoBehaviour
 
     private void Start()
     {
+        //マップデータの読込
         string line = "";
         StringReader reader = new StringReader(csvFile.text);
         while (reader.Peek() != -1)
@@ -38,6 +37,7 @@ public class MapCreater : MonoBehaviour
             }
         }
 
+        //マップ情報の作成
         MapInfo mapInfo = new MapInfo(mapData, width, height);
         mapInfoSO.mapInfo = mapInfo;
         MapGenerate(mapInfo);
@@ -51,7 +51,6 @@ public class MapCreater : MonoBehaviour
         {
             for(int x = 0; x < mapInfo.width; x++)
             {
-                int reversedY = mapInfo.height - 1 - y; // Y軸を逆にする
                 if (mapInfo.mapData[y, x] == 0)
                 {
                     Instantiate(BlockPrefab, new Vector3(x, 0, -y), Quaternion.identity, transform);
@@ -107,6 +106,7 @@ public class MapInfo
         dijkstraMap = new int[height, width];
         flowMap = new Vector2[height, width];
         
+        //各グリッドのコストを無限大に初期化
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -116,23 +116,40 @@ public class MapInfo
         }
     }
     
+    /// <summary>
+    /// 指定した座標の方向を取得する
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
     public Vector2 GetFlowField(Vector2Int position)
     {
         return flowMap[position.y, position.x];
     }
 
+    /// <summary>
+    /// マップを更新する
+    /// </summary>
+    /// <param name="goal"></param>
     public void UpdateMap(Vector2Int goal)
     {
         UpdateDijkstraMap(goal);
         UpdateFlowFieldMap(dijkstraMap);
     }
     
+    /// <summary>
+    /// ダイクストラマップを更新する
+    /// </summary>
+    /// <param name="goal"></param>
     private void UpdateDijkstraMap(Vector2Int goal)
     {
         dijkstraMap = DijkstraAlgorithm.GetDijkstraMap(mapData, goal, out int maxCost);
         //DijkstraAlgorithm.PrintDijkstraMap(dijkstraMap);
     }
-
+    
+    /// <summary>
+    /// フローフィールドマップを更新する
+    /// </summary>
+    /// <param name="dijkstraMap"></param>
     private void UpdateFlowFieldMap(int[,] dijkstraMap)
     {
         for(int height = 0; height < this.height; height++)
