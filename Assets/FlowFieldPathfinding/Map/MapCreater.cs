@@ -40,12 +40,12 @@ public class MapCreater : MonoBehaviour
         //マップ情報の作成
         MapInfo mapInfo = new MapInfo(mapData, width, height);
         mapInfoSO.mapInfo = mapInfo;
-        MapGenerate(mapInfo);
+        GenerateMap(mapInfo);
 
-        mapInfo.UpdateMap(new Vector2Int(5, 5));
+        mapInfo.UpdateFlowFieldMap(new Vector2Int(5, 5));
     }
 
-    private void MapGenerate(MapInfo mapInfo)
+    private void GenerateMap(MapInfo mapInfo)
     {
         for(int y = 0; y < mapInfo.height; y++)
         {
@@ -130,7 +130,7 @@ public class MapInfo
     /// マップを更新する
     /// </summary>
     /// <param name="goal"></param>
-    public void UpdateMap(Vector2Int goal)
+    public void UpdateFlowFieldMap(Vector2Int goal)
     {
         UpdateDijkstraMap(goal);
         UpdateFlowFieldMap(dijkstraMap);
@@ -156,12 +156,12 @@ public class MapInfo
         {
             for(int width = 0; width < this.width; width++)
             {
-                flowMap[height, width] = GetFlowField(new Vector2Int(width, height), dijkstraMap);
+                flowMap[height, width] = CalculateFlowFieldDirection(new Vector2Int(width, height), dijkstraMap);
             }
         }
     }
     
-    private Vector2 GetFlowField(Vector2Int position, int[,] dijkstraMap)
+    private Vector2 CalculateFlowFieldDirection(Vector2Int position, int[,] dijkstraMap)
     {
         Vector2Int[] directions = new Vector2Int[]
         {

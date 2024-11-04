@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34064376a5d719643b78bf4c8cf63611, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyCount: 500
+  _enemyCount: 2000
   _enemyPrefab: {fileID: 3690749210284117439, guid: 03bdd9c7550acde40868542d8239b372,
     type: 3}
   _mapInfoSO: {fileID: 11400000, guid: 49d71364006bf8543a23800539facb7e, type: 2}

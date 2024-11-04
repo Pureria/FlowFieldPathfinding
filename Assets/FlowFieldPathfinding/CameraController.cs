@@ -40,7 +40,7 @@ public class CameraController : MonoBehaviour
             {
                 //Debug.Log(hit.collider.gameObject.name);
                 Vector2Int clickPos = new Vector2Int((int)hit.point.x, (int)-hit.point.z);
-                mapInfoSO.mapInfo.UpdateMap(clickPos);
+                mapInfoSO.mapInfo.UpdateFlowFieldMap(clickPos);
             }
         }
     }
