@@ -161,6 +161,12 @@ public class MapInfo
         }
     }
     
+    /// <summary>
+    /// 指定した座標のフローフィールドの方向を計算する
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="dijkstraMap"></param>
+    /// <returns></returns>
     private Vector2 CalculateFlowFieldDirection(Vector2Int position, int[,] dijkstraMap)
     {
         Vector2Int[] directions = new Vector2Int[]

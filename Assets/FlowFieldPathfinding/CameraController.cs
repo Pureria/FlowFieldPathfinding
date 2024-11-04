@@ -31,8 +31,8 @@ public class CameraController : MonoBehaviour
         //マウスホイールでZ軸移動
         transform.position += transform.up * -Input.mouseScrollDelta.y * zoomSpeed * Time.deltaTime;
         
-        //クリックしたオブジェクト取得
-        if (Input.GetMouseButtonDown(0))
+        //クリックを押し続けている場合オブジェクト取得
+        if (Input.GetMouseButton(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
